@@ -59,7 +59,7 @@ typedef enum // sent as 4 bit
 // These flags are reset after sending them once to the host
 // They are set again if the error is still present
 // Slcan sends this in the error report "EXXXXXXXX\r"
-// Candlelight sends this in a special error packet with a flag (legacy: CAN_ID_Error, ElmüSoft: MSG_Error)
+// Candlelight sends this in a special error packet with a flag (legacy: CAN_ID_Error, ElmÃ¼Soft: MSG_Error)
 typedef enum // sent as 8 bit 
 {
     APP_CanRxFail       = 0x01, // the HAL reports an error receiving a CAN packet.
@@ -72,7 +72,7 @@ typedef enum // sent as 8 bit
 // ============================================================================================
 
 // TARGET_MCU is defined in the Makefile
-#if defined(STM32G431xx)
+#if defined(STM32G431xx || STM32G473xx)
 
     #include "stm32g4xx.h"
     #include "stm32g4xx_hal.h"
