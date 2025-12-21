@@ -170,8 +170,8 @@ typedef enum // sent as 8 bit
     // PP = Push/Pull, OD = Open Drain
     #define LED_Mode            GPIO_MODE_OUTPUT_PP
     // Some boards use inverted voltage (Low = ON)
-    #define LED_ON              GPIO_PIN_RESET
-    #define LED_OFF             GPIO_PIN_SET
+    #define LED_ON              GPIO_PIN_SET
+    #define LED_OFF             GPIO_PIN_RESET
     // The CAN interface (some processors have 3 CAN interfaces)
     #define CAN_INTERFACE       FDCAN1
     // Some boards have a 120 Ohm termination resistor that can be enabled by a GPIO pin.
