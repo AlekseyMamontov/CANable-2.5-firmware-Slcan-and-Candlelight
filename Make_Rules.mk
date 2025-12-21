@@ -1,5 +1,5 @@
 
-# CANable Makefile (from normaldotcom, modified by ElmüSoft)
+# CANable Makefile (from normaldotcom, modified by ElmÃ¼Soft)
 # https://netcult.ch/elmue/CANable Firmware Update
 
 #######################################
@@ -19,7 +19,7 @@ LD_SCRIPT = $(CONFIG_DIR)/$(TARGET_MCU).ld
 
 # HSI48_VALUE = internal high speed oscillator frequency
 # HSE_VALUE   = external high speed oscillator frequency
-USER_DEFS = -D HSI48_VALUE=48000000 -D HSE_VALUE=16000000
+USER_DEFS = -D HSI48_VALUE=48000000 -D HSE_VALUE=8000000
 
 # user C flags (enable warnings, enable debug info)
 USER_CFLAGS = -Wall -g -ffunction-sections -fdata-sections -Os
@@ -43,6 +43,7 @@ OBJCOPY = arm-none-eabi-objcopy
 ifeq ($(OS), Windows_NT)
     # On Windows mkdir is already implemented in the console.
     # But Windows mkdir takes other parameters than Linux mkdir.
+
     # Simply rename the file mkdir.exe in your MingW installation folder into mmkdir.exe
     MKDIR = mmkdir -p
 else
