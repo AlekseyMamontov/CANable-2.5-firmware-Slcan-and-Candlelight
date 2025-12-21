@@ -161,10 +161,10 @@ typedef enum // sent as 8 bit
 
 #elif defined(USBCANFD_2)
 
-    // green LED is at pin A0
+    // green LED is at pin A5
     #define LED_TX_Pin          GPIO_PIN_5   
     #define LED_TX_Port         GPIOA
-    // blue Led is at pin A15
+    // blue Led is at pin A6
     #define LED_RX_Pin          GPIO_PIN_6
     #define LED_RX_Port         GPIOA
     // PP = Push/Pull, OD = Open Drain
