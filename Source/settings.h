@@ -72,7 +72,7 @@ typedef enum // sent as 8 bit
 // ============================================================================================
 
 // TARGET_MCU is defined in the Makefile
-#if defined(STM32G431xx || STM32G473xx)
+#if defined(STM32G431xx) || defined(STM32G473xx)
 
     #include "stm32g4xx.h"
     #include "stm32g4xx_hal.h"
