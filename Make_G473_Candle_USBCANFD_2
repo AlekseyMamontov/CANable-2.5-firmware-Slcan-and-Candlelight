@@ -4,7 +4,7 @@
 ######################################
 #
 # This makefile compiles for the CANable boards from 
-# MKS Makerbase, Walfront, DSD Tech, Jhoinrch where the green LED is at pin A0
+# Pin RX PA6, Pin TX PA5
 #
 # Compile this by typing:
 # make -s -f Make_G473_Candle_USBCANFD_2
