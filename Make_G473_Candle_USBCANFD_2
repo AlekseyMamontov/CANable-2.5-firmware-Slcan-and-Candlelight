@@ -4,7 +4,7 @@
 ######################################
 #
 # This makefile compiles for the CANable boards from 
-# Pin RX PA6, Pin TX PA5
+# Pin LED  RX PA6, Pin LED TX PA5
 #
 # Compile this by typing:
 # make -s -f Make_G473_Candle_USBCANFD_2
