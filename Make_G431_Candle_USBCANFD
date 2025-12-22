@@ -17,6 +17,6 @@ TARGET_BOARD    = USBCANFD
 TARGET_MCU      = STM32G431xx
 
 # name of the compiled files (*.bin, *.hex, *.elf)
-TARGET_FILE = STM32G73_Candlelight2.5_USBCANFD
+TARGET_FILE = STM32G431_Candlelight2.5_USBCANFD
 
 include Make_Rules.mk
