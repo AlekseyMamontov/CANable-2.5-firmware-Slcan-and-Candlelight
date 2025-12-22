@@ -187,6 +187,34 @@ typedef enum // sent as 8 bit
     #define ISOLATOR_ON         GPIO_PIN_SET    // turn on power supply of isolator chip
     #define ISOLATOR_OFF        GPIO_PIN_RESET   
 
+#elif defined(USBCANFD)
+
+    // green LED is at pin A5
+    #define LED_TX_Pin          GPIO_PIN_5   
+    #define LED_TX_Port         GPIOA
+    // blue Led is at pin A6
+    #define LED_RX_Pin          GPIO_PIN_6
+    #define LED_RX_Port         GPIOA
+    // PP = Push/Pull, OD = Open Drain
+    #define LED_Mode            GPIO_MODE_OUTPUT_PP
+    // Some boards use inverted voltage (Low = ON)
+    #define LED_ON              GPIO_PIN_SET
+    #define LED_OFF             GPIO_PIN_RESET
+    // The CAN interface (some processors have 3 CAN interfaces)
+    #define CAN_INTERFACE       FDCAN1
+    // Some boards have a 120 Ohm termination resistor that can be enabled by a GPIO pin.
+    // The board from MKS Makerbase Labs has a manual switch --> set TERM_Pin = -1
+    #define TERMINATOR_Port     GPIOA
+    #define TERMINATOR_Pin      -1 // GPIO_PIN_3
+    #define TERMINATOR_ON       GPIO_PIN_SET
+    #define TERMINATOR_OFF      GPIO_PIN_RESET
+    // The power supply of the isolator chip can be disabled when not in use.
+    // If the board has no isolation set ISOLATOR_PWR_Pin = -1
+	#define ISOLATOR_PWR_Port   GPIOA
+	#define ISOLATOR_PWR_Pin    -1
+    #define ISOLATOR_ON         GPIO_PIN_SET    // turn on power supply of isolator chip
+    #define ISOLATOR_OFF        GPIO_PIN_RESET   
+
 #else
     #error "TARGET_BOARD not defined in makefile"
 #endif
