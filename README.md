@@ -1,7 +1,9 @@
-# CANable-2.5-firmware-Slcan-and-Candlelight
+# CANable-2.5-firmware-Slcan-and-Candlelight_fork
+
+
 Two new high quality, speed optmimized firmwares for CANable adapters with lots of new features.
 
-![CANable Adapter](https://github.com/user-attachments/assets/061f60ba-14a2-4896-866f-6226fc9123f6)
+![USBCANFD](https://github.com/AlekseyMamontov/CANable-2.5-firmware-Slcan-and-Candlelight/blob/main/Images/USB_CANFD_473.jpg)
 
 
 This is the first project that combines the two CANable firmware's Slcan and Candlelight into one code base.
