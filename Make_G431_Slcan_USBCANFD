@@ -1,0 +1,22 @@
+
+# CANable Slcan Makefile
+
+######################################
+#
+# This makefile compiles for the CANable boards from 
+#  Pin LED RX PA6, Pin LED TX PA5
+#
+# Compile this by typing:
+# make -s -f Make_G431_Slcan_USBCANFD
+#######################################
+
+# TARGET_BOARD and TARGET_MCU: maximum 24 characters!
+
+TARGET_FIRMWARE = Slcan
+TARGET_BOARD    = USBCANFD
+TARGET_MCU      = STM32G431xx
+
+# name of the compiled files (*.bin, *.hex, *.elf)
+TARGET_FILE = STM32G431_Slcan2.5_USBCANFD
+
+include Make_Rules.mk
