@@ -25,5 +25,5 @@ You find the version history here:
 https://netcult.ch/elmue/CANable%20Firmware%20Update#Source_Code
 _____________________________________________________________________
 
-#This is an adaptation of the project for the USBCANFD(2) adapter based on STM32G431 and STM32G473.
+# This is an adaptation of the project for the USBCANFD(2) adapter based on STM32G431 and STM32G473.
 <img width="500"  alt="USBCANFD_2 adapters" src="https://github.com/AlekseyMamontov/CANable-2.5-firmware-Slcan-and-Candlelight/blob/main/Images/USB_CANFD_473.jpg">
