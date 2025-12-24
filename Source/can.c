@@ -69,11 +69,15 @@ void can_init()
 {
    
 #if defined(USBCANFD_2)
+    
 
-#else
+
+
+
+
 
     
-    
+#else    
     __HAL_RCC_FDCAN_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -1027,4 +1031,5 @@ uint16_t can_calc_bit_count_in_frame(FDCAN_RxHeaderTypeDef* header)
     }
     return time_msg;
 }
+
 
