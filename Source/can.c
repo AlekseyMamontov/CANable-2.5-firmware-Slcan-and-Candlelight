@@ -67,6 +67,13 @@ uint16_t  can_calc_bit_count_in_frame(FDCAN_RxHeaderTypeDef *header);
 // Initialize CAN peripheral settings, but don't actually start the peripheral
 void can_init()
 {
+   
+#if defined(USBCANFD_2)
+
+#else
+
+    
+    
     __HAL_RCC_FDCAN_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
     __HAL_RCC_GPIOC_CLK_ENABLE();
@@ -99,6 +106,8 @@ void can_init()
     GPIO_InitStruct.Alternate = GPIO_AF9_FDCAN1;
     HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+#endif    
+    
     can_reset();
     can_handle.Instance = CAN_INTERFACE; // see settings.h
 }
@@ -183,7 +192,7 @@ eFeedback can_open(uint32_t mode)
     uint32_t clock_MHz = system_get_can_clock() / 1000000; // 160
     nom_bit_len_ns  = 1 + can_bitrate_nominal.Seg1 + can_bitrate_nominal.Seg2; // time quantums
     nom_bit_len_ns *= can_bitrate_nominal.Brp; // clock prescaler
-    nom_bit_len_ns *= 1000;                    // µs -> ns
+    nom_bit_len_ns *= 1000;                    // Âµs -> ns
     nom_bit_len_ns /= clock_MHz;
 
     busload_ppm  = 0;
@@ -336,7 +345,7 @@ void can_process(uint32_t tick_now)
     uint8_t can_data_buf[64] = {0};
     char    dbg_msg_buf[100];
 
-    // This was competely wrong in the original Candlelight firmware (fixed by Elmüsoft).
+    // This was competely wrong in the original Candlelight firmware (fixed by ElmÃ¼soft).
     // Instead of sending a Tx Event to the host in the moment when the processor has really sent the packet to the CAN bus
     // they have sent a fake event immediately after dispatching the packet, no matter if it really was sent or not.
     FDCAN_TxEventFifoTypeDef tx_event;
@@ -665,6 +674,7 @@ eFeedback can_set_data_baudrate(can_data_bitrate bitrate)
             can_bitrate_data.Seg2 = 4;
             break;
         // For any strange reason the STM32G431 works at 8 Mbaud only if the samplepoint is 50%.
+
         // But at 10 Mbaud it works with 75%. Very weird!
         case CAN_DATA_BITRATE_8M:
             can_bitrate_data.Brp  = 2; // 160 MHz / 2 / (1 + 4 + 5) = 8 MBaud
