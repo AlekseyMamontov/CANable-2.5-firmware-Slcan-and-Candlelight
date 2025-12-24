@@ -36,6 +36,23 @@ static bool              led_identify    = false;
 // Initialize LED GPIOs
 void led_init()
 {
+  
+#if defined(USBCANFD_2)
+    
+    // CAN1 LED RX PA6,TX PA5 : CAN2 LED RX PA4,TX PA3 : swdio PA13,PA14
+
+    RCC->AHB2ENR |= RCC_AHB2ENR_GPIOAEN;
+
+    //   ------------  151413121110 9 8 7 6 5 4 3 2 1 0
+	GPIOA->MODER = 	 0b11101011111111111101010101111111;
+	//-------------    151413121110 9 8 7 6 5 4 3 2 1 0
+	GPIOA->OSPEEDR = 0b00111100000000000001010101000000;
+
+    GPIOA->BSRR =    0b0000000001111000; // LED_ON pin 5,6,4,3
+    
+#else   
+   
+
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
 
@@ -56,20 +73,46 @@ void led_init()
 
     HAL_GPIO_WritePin(LED_RX, LED_ON);
     HAL_GPIO_WritePin(LED_TX, LED_ON);
+
+#endif 
+
+
 }
 
 // when the operating system goes into sleep mode --> turn off both LED's
 void led_sleep()
 {
+    #if defined(USBCANFD_2)
+
+    GPIOA->BRR = 0b0000000001111000; 
+
+    #else
+
     HAL_GPIO_WritePin(LED_RX, LED_OFF);
     HAL_GPIO_WritePin(LED_TX, LED_OFF);
+
+    #endif
+   
 }
 
 // Blink green / blue alternatingly on power on.
 // This is a blocking function by purpose.
 void led_blink_power_on()
 {
-    uint8_t i;
+  uint8_t i;
+
+#if defined(USBCANFD_2)
+
+    for (i = 0; i < POWER_ON_COUNT; i++)
+    {
+        GPIOA->BSRR = 0b00000000001010000000000001010000;//set PA6,PA4 ; reset PA5,PA3
+        HAL_Delay(POWER_ON_DURATION);
+        GPIOA->BSRR = 0b00000000000101000000000000101000;//set PA5,PA3 ; reset PA6,PA4        
+        HAL_Delay(POWER_ON_DURATION);
+    } 
+
+#else
+    
     for (i = 0; i < POWER_ON_COUNT; i++)
     {
         HAL_GPIO_WritePin(LED_RX, LED_ON);
@@ -79,25 +122,47 @@ void led_blink_power_on()
         HAL_GPIO_WritePin(LED_TX, LED_ON);    
         HAL_Delay(POWER_ON_DURATION);
     }
+
+ #endif
+
 }
 
 // Blink green / blue alternatingly to identify a device if multiple devices are connected at the same time.
 // This is a non-blocking function executed by USB command.
 void led_blink_identify(bool blink_on)
 {
+
+
     led_next_blink  = HAL_GetTick() + IDENTIFY_DURATION;
     led_identify = blink_on;
+
+#if defined(USBCANFD_2)
+
+  GPIOA->BSRR = 0b0000000001111000; // LED_ON pin 5,6,4,3
+
+#else
     HAL_GPIO_WritePin(LED_RX, LED_ON);
     HAL_GPIO_WritePin(LED_TX, LED_ON);
+#endif    
+
 }
 
 // Turn green LED on/off
 void led_turn_TX(uint8_t state)
 {
+
     if (led_identify)
         return;
-    
+ #if defined(USBCANFD_2)
+
+ GPIOA->BSRR = (state)? 0b0000000000101000 : (0b0000000000101000)<<16;
+
+ #else   
+
     HAL_GPIO_WritePin(LED_TX, state);
+
+#endif 
+
 }
 
 // Turn green LED on for a short duration
@@ -111,7 +176,12 @@ void led_flash_TX()
     // This prevents a solid status LED on a busy canbus
     if (led_TX_laston == 0 && HAL_GetTick() - led_TX_lastoff > FLASH_OFF_DURATION)
     {
+
+        #if defined(USBCANFD_2) 
+        GPIOA->BSRR = 0b0000000000100000;//set PA5
+        #else  
         HAL_GPIO_WritePin(LED_TX, LED_ON);
+        #endif 
         led_TX_laston = HAL_GetTick();
     }
 }
@@ -127,7 +197,12 @@ void led_flash_RX()
     // This prevents a solid status LED on a busy canbus
     if (led_RX_laston == 0 && HAL_GetTick() - led_RX_lastoff > FLASH_OFF_DURATION)
     {
+
+        #if defined(USBCANFD_2) 
+        GPIOA->BSRR = 0b0000000001000000;//set PA6
+        #else  
         HAL_GPIO_WritePin(LED_RX, LED_ON);
+        #endif
         led_RX_laston = HAL_GetTick();
     }
 }
@@ -137,16 +212,28 @@ void led_process(uint32_t tick_now)
 {
     if (led_identify) // highest priority
     {
+
         // Blink pattern: Both off, Rx ON, Both off, Tx ON, ...
         if (tick_now >= led_next_blink)
         {
             led_blink_count ++;
+           
+          #if defined(USBCANFD_2) 
+
+          GPIOA->BSRR =  ((led_blink_count & 3) == 1)? 0b0000000000101000:(0b0000000000101000)<<16;// TX
+          GPIOA->BSRR =  ((led_blink_count & 3) == 3)? 0b0000000001010000:(0b0000000001010000)<<16;// RX 
+          
+          #else  
             uint8_t status_tx = ((led_blink_count & 3) == 1) ? LED_ON : LED_OFF;            
             uint8_t status_rx = ((led_blink_count & 3) == 3) ? LED_ON : LED_OFF;
             HAL_GPIO_WritePin(LED_TX, status_tx);            
             HAL_GPIO_WritePin(LED_RX, status_rx);
+          #endif 
+
             led_next_blink += IDENTIFY_DURATION;            
         }
+
+
         return;
     }
     
