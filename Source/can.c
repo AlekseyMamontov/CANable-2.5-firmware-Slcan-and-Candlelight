@@ -69,9 +69,16 @@ void can_init()
 {
    
 #if defined(USBCANFD_2)
-    
 
-
+RCC->AHB2ENR |= RCC_AHB2ENR_GPIOBEN;    
+//-------------    151413121110 9 8 7 6 5 4 3 2 1 0    
+GPIOB->MODER =   0b11111111111110100010101111111111; // alt FDCAN1,FDCAN2
+//-------------    151413121110 9 8 7 6 5 4 3 2 1 0
+GPIOB->OSPEEDR = 0b00000000000011110011110000000000; //very high speed
+//-------	         7   6   5   4   3   2   1   0
+GPIOB->AFR[0] = 0b00001001100100000000000000000000;//af9 fdcan2
+    //-------	    15  14  13  12  11  10   9   8
+GPIOB->AFR[1] = 0b00000000000000000000000010011001;//af9 fdcan1
 
 
 
@@ -1031,5 +1038,6 @@ uint16_t can_calc_bit_count_in_frame(FDCAN_RxHeaderTypeDef* header)
     }
     return time_msg;
 }
+
 
 
