@@ -37,9 +37,13 @@ Candlelight
 ---------------
 
 sudo ip link set can0 up type can bitrate 500000 dbitrate 2000000 fd on (500 kb / flex data 2 Mbps)
+
 sudo ip link set can0 up type can bitrate 500000 dbitrate 5000000 fd on (500 kb / flex data 5 Mbps)
+
 candump can0
+
 cangen can0 -f -b   (test send canfd packet)
+
 
 
 
