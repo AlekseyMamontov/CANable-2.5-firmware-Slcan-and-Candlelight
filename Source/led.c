@@ -220,8 +220,8 @@ void led_process(uint32_t tick_now)
            
           #if defined(USBCANFD_2) 
 
-          GPIOA->BSRR =  ((led_blink_count & 3) == 1)? 0b0000000000101000:(0b0000000000101000)<<16;// TX
-          GPIOA->BSRR =  ((led_blink_count & 3) == 3)? 0b0000000001010000:(0b0000000001010000)<<16;// RX 
+          GPIOA->BSRR =  ((led_blink_count & 3) == 1)? 0b0000000000100000:(0b0000000000100000)<<16;// TX
+          GPIOA->BSRR =  ((led_blink_count & 3) == 3)? 0b0000000001000000:(0b0000000001000000)<<16;// RX 
           
           #else  
             uint8_t status_tx = ((led_blink_count & 3) == 1) ? LED_ON : LED_OFF;            
