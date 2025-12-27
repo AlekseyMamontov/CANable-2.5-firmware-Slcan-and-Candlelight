@@ -116,7 +116,7 @@ bool system_init(void)
 
     HAL_RCCEx_CRSConfig(&pInit);
 
-    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
+    //HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
     __HAL_RCC_GPIOF_CLK_ENABLE();
     __HAL_RCC_GPIOA_CLK_ENABLE();
     __HAL_RCC_GPIOB_CLK_ENABLE();
@@ -126,7 +126,7 @@ bool system_init(void)
     canfd_clock = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_FDCAN); // 160 MHz
  
     #endif
-
+    HAL_NVIC_SetPriority(SysTick_IRQn, 0, 0);
     
     system_init_timestamp();
     system_set_option_bytes(OPT_BOR_Level4);
@@ -285,5 +285,6 @@ eFeedback system_set_option_bytes(eOptionBytes e_Option)
     // Therefore dfu_switch_to_bootloader() handles this special case.
     return FBK_Success;
 }
+
 
 
