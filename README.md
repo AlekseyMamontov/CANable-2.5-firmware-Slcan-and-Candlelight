@@ -29,3 +29,17 @@ _____________________________________________________________________
 This is an adaptation of the project for the  USBCANFD adapter based on STM32G431 and STM32G473.
 
 <img width="500"  alt="USBCANFD_2 adapters" src="https://github.com/AlekseyMamontov/CANable-2.5-firmware-Slcan-and-Candlelight/blob/main/Images/USB_CANFD_473.jpg">
+
+
+Linux terminal can-utils 
+
+Candlelight 
+---------------
+
+sudo ip link set can0 up type can bitrate 500000 dbitrate 2000000 fd on (500 kb / flex data 2 Mbps)
+sudo ip link set can0 up type can bitrate 500000 dbitrate 5000000 fd on (500 kb / flex data 5 Mbps)
+candump can0
+cangen can0 -f -b   (test send canfd packet)
+
+
+
