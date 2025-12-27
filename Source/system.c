@@ -19,6 +19,13 @@ bool system_init(void)
     if (HAL_Init() != HAL_OK)
       return false;
 
+   #if defined(USBCANFD_2)
+
+
+    
+  #else
+ 
+    
     RCC_OscInitTypeDef RCC_OscInitStruct = {0};
     RCC_ClkInitTypeDef RCC_ClkInitStruct = {0};
     RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
@@ -76,7 +83,10 @@ bool system_init(void)
     __HAL_RCC_GPIOG_CLK_ENABLE(); // just nrst is on port G
     
     canfd_clock = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_FDCAN); // 160 MHz
+ 
+    #endif
 
+    
     system_init_timestamp();
     system_set_option_bytes(OPT_BOR_Level4);
     return true;
@@ -112,7 +122,7 @@ uint32_t system_get_can_clock()
     return canfd_clock;
 }
 
-// 1 µs timer
+// 1 Âµs timer
 void system_init_timestamp()
 {
     __HAL_RCC_TIM2_CLK_ENABLE();
@@ -155,6 +165,7 @@ bool system_is_option_enabled(eOptionBytes e_Option)
 // By only restarting the computer the CANable goes into Bootloader mode.
 // Thefore this firmware gives the user the possibility to ignore pin BOOT0.
 // Read the detailed description here: https://netcult.ch/elmue/CANable Firmware Update
+
 // ====================================================================================================
 // IMPORTANT ## IMPORTANT ## IMPORTANT ## IMPORTANT ## IMPORTANT ## IMPORTANT ## IMPORTANT ## IMPORTANT
 // If you modify this code and introduce a bug you may end up in a frozen firmware that cannot be updated anymore!
@@ -209,7 +220,7 @@ eFeedback system_set_option_bytes(eOptionBytes e_Option)
 
     // IMPORTANT:
     // If previous errors are not cleared, HAL_FLASHEx_OBProgram() will fail.
-    // This was wrong in all legacy firmware versions. (fixed by ElmüSoft)
+    // This was wrong in all legacy firmware versions. (fixed by ElmÃ¼Soft)
     // The programmers did not even notice this bug because of a non-existent error handling (sloppy code).
     __HAL_FLASH_CLEAR_FLAG(FLASH_FLAG_ALL_ERRORS);        
     
