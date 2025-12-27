@@ -21,8 +21,49 @@ bool system_init(void)
 
    #if defined(USBCANFD_2)
 
-
+    // R1MODE bit configuration (<150Mhz)  1,  (>150MHz) 0
+       RCC->APB1ENR1 |= RCC_APB1ENR1_PWREN;
+       PWR->CR5 &= ~PWR_CR5_R1MODE;
+       while (PWR->SR2 & PWR_SR2_VOSF);
+    // HSE 8Mhz on
+       RCC->CR |= RCC_CR_HSEON; 
+       while (!(RCC->CR & RCC_CR_HSERDY));
+    //Flash
+       FLASH->ACR = FLASH_ACR_LATENCY_4WS | FLASH_ACR_PRFTEN | FLASH_ACR_ICEN | FLASH_ACR_DCEN;
     
+      RCC->PLLCFGR = 0; // reset PLL
+      RCC->PLLCFGR |= (RCC_PLLCFGR_PLLSRC_HSE |   // HSE ON
+                    (1 << RCC_PLLCFGR_PLLM_Pos) | // PLLM = 2 (8 МГц / 2 = 4 МГц)
+                    (80 << RCC_PLLCFGR_PLLN_Pos)| // PLLN = 80 * 4 МГц *  320 МГц)
+                    (0 << RCC_PLLCFGR_PLLR_Pos) | // PLLR = 2 (320 МГц / 2 = 160 МГц)
+					(0 << RCC_PLLCFGR_PLLQ_Pos) | // PLLQ = 4 (320 МГц / 4 = 80 МГц) for FDCAN
+                    RCC_PLLCFGR_PLLREN | RCC_PLLCFGR_PLLQEN); 
+
+    RCC->CR |= RCC_CR_PLLON;
+    while (!(RCC->CR & RCC_CR_PLLRDY)); // Ожидание готовности PLL
+
+    // Настройка AHB, APB1 и APB2
+    RCC->CFGR |= RCC_CFGR_HPRE_DIV1; // AHB = SYSCLK
+    RCC->CFGR |= RCC_CFGR_PPRE1_DIV1; // APB1 = HCLK
+    RCC->CFGR |= RCC_CFGR_PPRE2_DIV1; // APB2 = HCLK
+
+    // Установка SYSCLK на PLL
+    RCC->CFGR |= RCC_CFGR_SW_PLL;
+    while ((RCC->CFGR & RCC_CFGR_SWS) != RCC_CFGR_SWS_PLL); 
+    RCC->APB1ENR1 |= RCC_APB1ENR1_FDCANEN;
+    
+    canfd_clock = 160000000UL;
+    
+    // for usb
+    RCC->CRRCR |= RCC_CRRCR_HSI48ON; 
+    while(!(RCC->CRRCR & RCC_CRRCR_HSI48RDY));
+    // CRS (Clock Recovery System)
+    RCC->APB1ENR1 |= RCC_APB1ENR1_CRSEN;
+    CRS->CFGR |= (2 << CRS_CFGR_SYNCSRC_Pos); 
+    CRS->CR |= CRS_CR_AUTOTRIMEN | CRS_CR_CEN;
+    
+    RCC->APB1ENR1 |= RCC_APB1ENR1_USBEN;
+
   #else
  
     
@@ -244,4 +285,5 @@ eFeedback system_set_option_bytes(eOptionBytes e_Option)
     // Therefore dfu_switch_to_bootloader() handles this special case.
     return FBK_Success;
 }
+
 
